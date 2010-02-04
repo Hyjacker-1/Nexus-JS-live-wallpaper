@@ -4,6 +4,7 @@ var OFFSET = 3000;
 var PIXEL_BOX_SIZE = 350;
 var GRID_SIZE = 8;
 var EVENT_CREATION_INTERVALL = 400;
+var EVENT_RESTART_INTERVALL = 30000;
 var BLUE = '0564B2'
 var RED = 'DF2626'
 var GREEN = '0C8942'
@@ -11,10 +12,12 @@ var YELLOW = 'FBC211'
 var pageX, pageY;
 var docWidth = $(window).width();
 var docHeight = $(window).height();
+var refreshIntervallID;
 
 $(document).ready(function() {
 	$('body').css('background-image', 'url("nexusBG.png")').css('background-repeat', 'repeat');
-	setInterval(generateRandomEvents, Math.floor(Math.random()*EVENT_CREATION_INTERVALL));
+	init();	
+	setInterval('restart()', EVENT_RESTART_INTERVALL);	
 });
 
 $().mousemove(function(event){
@@ -27,7 +30,15 @@ $().mousedown(function(){
 	generateEvent(pos);
 });
 
+function restart() {
+	clearInterval(refreshIntervallID);
+	$('#wallpaper').empty();
+	setTimeout('init()', 3000);
+}
 
+function init() {
+	refreshIntervallID = setInterval(generateRandomEvents, Math.floor(Math.random()*EVENT_CREATION_INTERVALL));	
+}
 
 function quantizePos(xPos, yPos) {
 	var quantizedXPos = xPos - (xPos % GRID_SIZE);
